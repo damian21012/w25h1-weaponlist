@@ -1,22 +1,22 @@
-import { useParams, Link } from 'react-router-dom';
-
-// TODO: 테스트용 Weapon
-const weapon = {
-    id: "6928754e6be63a22686b329e",
-    name: "Adept's Battleaxe",
-    tier: "4.0",
-    item_power: 700,
-    identifier: "T4_MAIN_AXE",
-    icon: "https://render.albiononline.com/v1/item/T4_MAIN_AXE@0.png?quality=0&size=217&locale=en"
-};
+import { useParams, Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { getWeaponDetail } from '../api/weaponApi.js'
 
 const WeaponDetail = () => {
-    const { id } = useParams();
+    const { id } = useParams()
+
+    const { data: weapon, isLoading, isError, error } = useQuery({
+        queryKey: ['weapon', id],
+        queryFn: () => getWeaponDetail(id),
+        enabled: !!id,
+    })
+
+    if (isLoading) return <p className="text-center mt-10">Loading weapon...</p>
+    if (isError) return <p className="text-center mt-10">오류 발생: {error.message}</p>
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 flex justify-center">
             <div className="bg-white p-8 rounded-3xl shadow-2xl max-w-2xl w-full">
-
                 <div className="flex justify-center mb-6">
                     <img
                         src={weapon.icon}
@@ -32,6 +32,16 @@ const WeaponDetail = () => {
                     <p className="text-xl font-medium text-indigo-600 mb-3">
                         Tier: {weapon.tier} | Power: {weapon.item_power}
                     </p>
+                    <p className="text-gray-500 mb-3">Identifier: {weapon.identifier}</p>
+
+                    <a
+                        href={`https://www.youtube.com/results?search_query=Albion+${weapon.name}+guide`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block mt-2 px-5 py-2 bg-red-600 text-white rounded-full shadow-md hover:bg-red-700 transition duration-150"
+                    >
+                        Youtube 공략
+                    </a>
                 </div>
 
                 <div className="flex justify-center mt-6">
@@ -39,12 +49,12 @@ const WeaponDetail = () => {
                         to="/"
                         className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
                     >
-                        리스트
+                        무기 리스트
                     </Link>
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default WeaponDetail;
+export default WeaponDetail
