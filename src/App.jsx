@@ -1,4 +1,3 @@
-// App.jsx
 import { Routes, Route } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import WeaponList from './pages/WeaponList.jsx'
